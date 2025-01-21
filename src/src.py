@@ -18,6 +18,14 @@ def create_database():
             location TEXT
         )
     ''')
+    cursor.execute('''
+        CREATE TABLE IF NOT EXISTS logs (
+            log_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            item_id TEXT,
+            action TEXT,
+            timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
+        )
+    ''')
     conn.commit()
     conn.close()
 
@@ -34,8 +42,11 @@ class InventoryManagementApp(ctk.CTk):
     def __init__(self):
         super().__init__()
         self.title("Inventory Management System")
-        self.geometry("600x400")
+        self.geometry("800x600")  # Updated window size
         
+        # Centering the window
+        self.eval('tk::PlaceWindow %s center' % self.winfo_toplevel())
+
         # Create the database
         create_database()
 
@@ -43,44 +54,45 @@ class InventoryManagementApp(ctk.CTk):
         self.create_widgets()
 
     def create_widgets(self):
-        # Labels and Entry fields
-        ctk.CTkLabel(self, text="Item ID").grid(row=0, column=0, padx=10, pady=10)
-        self.entry_item_id = ctk.CTkEntry(self)
+        # Labels and Entry fields with increased font size
+        ctk.CTkLabel(self, text="Item ID", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=10)
+        self.entry_item_id = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_item_id.grid(row=0, column=1)
 
-        ctk.CTkLabel(self, text="Name").grid(row=1, column=0, padx=10, pady=10)
-        self.entry_name = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Name", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=10)
+        self.entry_name = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_name.grid(row=1, column=1)
 
-        ctk.CTkLabel(self, text="Description").grid(row=2, column=0, padx=10, pady=10)
-        self.entry_description = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Description", font=("Arial", 14)).grid(row=2, column=0, padx=10, pady=10)
+        self.entry_description = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_description.grid(row=2, column=1)
 
-        ctk.CTkLabel(self, text="Category").grid(row=3, column=0, padx=10, pady=10)
-        self.entry_category = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Category", font=("Arial", 14)).grid(row=3, column=0, padx=10, pady=10)
+        self.entry_category = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_category.grid(row=3, column=1)
 
-        ctk.CTkLabel(self, text="Quantity").grid(row=4, column=0, padx=10, pady=10)
-        self.entry_quantity = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Quantity", font=("Arial", 14)).grid(row=4, column=0, padx=10, pady=10)
+        self.entry_quantity = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_quantity.grid(row=4, column=1)
 
-        ctk.CTkLabel(self, text="Reorder Level").grid(row=5, column=0, padx=10, pady=10)
-        self.entry_reorder_level = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Reorder Level", font=("Arial", 14)).grid(row=5, column=0, padx=10, pady=10)
+        self.entry_reorder_level = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_reorder_level.grid(row=5, column=1)
 
-        ctk.CTkLabel(self, text="Supplier").grid(row=6, column=0, padx=10, pady=10)
-        self.entry_supplier = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Supplier", font=("Arial", 14)).grid(row=6, column=0, padx=10, pady=10)
+        self.entry_supplier = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_supplier.grid(row=6, column=1)
 
-        ctk.CTkLabel(self, text="Location").grid(row=7, column=0, padx=10, pady=10)
-        self.entry_location = ctk.CTkEntry(self)
+        ctk.CTkLabel(self, text="Location", font=("Arial", 14)).grid(row=7, column=0, padx=10, pady=10)
+        self.entry_location = ctk.CTkEntry(self, font=("Arial", 14))
         self.entry_location.grid(row=7, column=1)
 
-        # Buttons
-        ctk.CTkButton(self, text="Add Item", command=self.add_item).grid(row=8, column=0, padx=10, pady=10)
-        ctk.CTkButton(self, text="Remove Item", command=self.remove_item).grid(row=8, column=1, padx=10, pady=10)
-        ctk.CTkButton(self, text="Update Item", command=self.update_item).grid(row=8, column=2, padx=10, pady=10)
-        ctk.CTkButton(self, text="Display Inventory", command=self.display_inventory).grid(row=9, column=0, columnspan=3, padx=10, pady=10)
+        # Buttons with increased font size
+        ctk.CTkButton(self, text="Add Item", command=self.add_item, font=("Arial", 14)).grid(row=8, column=0, padx=10, pady=10)
+        ctk.CTkButton(self, text="Remove Item", command=self.remove_item, font=("Arial", 14)).grid(row=8, column=1, padx=10, pady=10)
+        ctk.CTkButton(self, text="Update Item", command=self.update_item, font=("Arial", 14)).grid(row=8, column=2, padx=10, pady=10)
+        ctk.CTkButton(self, text="Display Inventory", command=self.display_inventory, font=("Arial", 14)).grid(row=9, column=0, columnspan=3, padx=10, pady=10)
+        ctk.CTkButton(self, text="Display Logs", command=self.display_logs, font=("Arial", 14)).grid(row=10, column=0, columnspan=3, padx=10, pady=10)
 
     def add_item(self):
         item_id = self.entry_item_id.get()
@@ -147,7 +159,21 @@ class InventoryManagementApp(ctk.CTk):
         inventory_window.geometry("400x300")
 
         for index, item in enumerate(items):
-            ctk.CTkLabel(inventory_window, text=f"ID: {item[0]}, Name: {item[1]}, Quantity: {item[4]}").pack(pady=5)
+            ctk.CTkLabel(inventory_window, text=f"ID: {item[0]}, Name: {item[1]}, Quantity: {item[4]}", font=("Arial", 12)).pack(pady=5)
+
+    def display_logs(self):
+        conn = sqlite3.connect('inventory_management.db')
+        cursor = conn.cursor()
+        cursor.execute('SELECT * FROM logs')
+        logs = cursor.fetchall()
+        conn.close()
+
+        logs_window = ctk.CTkToplevel(self)
+        logs_window.title("Logs")
+        logs_window.geometry("400x300")
+
+        for index, log in enumerate(logs):
+            ctk.CTkLabel(logs_window, text=f"Log ID: {log[0]}, Item ID: {log[1]}, Action: {log[2]}, Timestamp: {log[3]}", font=("Arial", 12)).pack(pady=5)
 
 if __name__ == "__main__":
     app = InventoryManagementApp()
