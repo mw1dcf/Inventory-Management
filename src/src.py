@@ -8,7 +8,7 @@ def create_database():
     cursor = conn.cursor()
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS inventory (
-            item_id TEXT PRIMARY KEY,
+            item_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT,
             description TEXT,
             category TEXT,
@@ -21,7 +21,7 @@ def create_database():
     cursor.execute('''
         CREATE TABLE IF NOT EXISTS logs (
             log_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            item_id TEXT,
+            item_id INTEGER,
             action TEXT,
             timestamp DATETIME DEFAULT CURRENT_TIMESTAMP
         )
@@ -55,47 +55,43 @@ class InventoryManagementApp(ctk.CTk):
 
     def create_widgets(self):
         # Labels and Entry fields with increased font size
-        ctk.CTkLabel(self, text="Item ID", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=10)
-        self.entry_item_id = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_item_id.grid(row=0, column=1)
-
-        ctk.CTkLabel(self, text="Name", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=10)
+        # Removed Item ID entry field
+        ctk.CTkLabel(self, text="Name", font=("Arial", 14)).grid(row=0, column=0, padx=10, pady=10)
         self.entry_name = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_name.grid(row=1, column=1)
+        self.entry_name.grid(row=0, column=1)
 
-        ctk.CTkLabel(self, text="Description", font=("Arial", 14)).grid(row=2, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Description", font=("Arial", 14)).grid(row=1, column=0, padx=10, pady=10)
         self.entry_description = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_description.grid(row=2, column=1)
+        self.entry_description.grid(row=1, column=1)
 
-        ctk.CTkLabel(self, text="Category", font=("Arial", 14)).grid(row=3, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Category", font=("Arial", 14)).grid(row=2, column=0, padx=10, pady=10)
         self.entry_category = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_category.grid(row=3, column=1)
+        self.entry_category.grid(row=2, column=1)
 
-        ctk.CTkLabel(self, text="Quantity", font=("Arial", 14)).grid(row=4, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Quantity", font=("Arial", 14)).grid(row=3, column=0, padx=10, pady=10)
         self.entry_quantity = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_quantity.grid(row=4, column=1)
+        self.entry_quantity.grid(row=3, column=1)
 
-        ctk.CTkLabel(self, text="Reorder Level", font=("Arial", 14)).grid(row=5, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Reorder Level", font=("Arial", 14)).grid(row=4, column=0, padx=10, pady=10)
         self.entry_reorder_level = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_reorder_level.grid(row=5, column=1)
+        self.entry_reorder_level.grid(row=4, column=1)
 
-        ctk.CTkLabel(self, text="Supplier", font=("Arial", 14)).grid(row=6, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Supplier", font=("Arial", 14)).grid(row=5, column=0, padx=10, pady=10)
         self.entry_supplier = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_supplier.grid(row=6, column=1)
+        self.entry_supplier.grid(row=5, column=1)
 
-        ctk.CTkLabel(self, text="Location", font=("Arial", 14)).grid(row=7, column=0, padx=10, pady=10)
+        ctk.CTkLabel(self, text="Location", font=("Arial", 14)).grid(row=6, column=0, padx=10, pady=10)
         self.entry_location = ctk.CTkEntry(self, font=("Arial", 14))
-        self.entry_location.grid(row=7, column=1)
+        self.entry_location.grid(row=6, column=1)
 
         # Buttons with increased font size
-        ctk.CTkButton(self, text="Add Item", command=self.add_item, font=("Arial", 14)).grid(row=8, column=0, padx=10, pady=10)
-        ctk.CTkButton(self, text="Remove Item", command=self.remove_item, font=("Arial", 14)).grid(row=8, column=1, padx=10, pady=10)
-        ctk.CTkButton(self, text="Update Item", command=self.update_item, font=("Arial", 14)).grid(row=8, column=2, padx=10, pady=10)
-        ctk.CTkButton(self, text="Display Inventory", command=self.display_inventory, font=("Arial", 14)).grid(row=9, column=0, columnspan=3, padx=10, pady=10)
-        ctk.CTkButton(self, text="Display Logs", command=self.display_logs, font=("Arial", 14)).grid(row=10, column=0, columnspan=3, padx=10, pady=10)
+        ctk.CTkButton(self, text="Add Item", command=self.add_item, font=("Arial", 14)).grid(row=7, column=0, padx=10, pady=10)
+        ctk.CTkButton(self, text="Remove Item", command=self.remove_item, font=("Arial", 14)).grid(row=7, column=1, padx=10, pady=10)
+        ctk.CTkButton(self, text="Update Item", command=self.update_item, font=("Arial", 14)).grid(row=7, column=2, padx=10, pady=10)
+        ctk.CTkButton(self, text="Display Inventory", command=self.display_inventory, font=("Arial", 14)).grid(row=8, column=0, columnspan=3, padx=10, pady=10)
+        ctk.CTkButton(self, text="Display Logs", command=self.display_logs, font=("Arial", 14)).grid(row=9, column=0, columnspan=3, padx=10, pady=10)
 
     def add_item(self):
-        item_id = self.entry_item_id.get()
         name = self.entry_name.get()
         description = self.entry_description.get()
         category = self.entry_category.get()
@@ -107,9 +103,10 @@ class InventoryManagementApp(ctk.CTk):
         conn = sqlite3.connect('inventory_management.db')
         cursor = conn.cursor()
         try:
-            cursor.execute('INSERT INTO inventory (item_id, name, description, category, quantity, reorder_level, supplier, location) VALUES (?, ?, ?, ?, ?, ?, ?, ?)', 
-                           (item_id, name, description, category, quantity, reorder_level, supplier, location))
+            cursor.execute('INSERT INTO inventory (name, description, category, quantity, reorder_level, supplier, location) VALUES (?, ?, ?, ?, ?, ?, ?)', 
+                           (name, description, category, quantity, reorder_level, supplier, location))
             conn.commit()
+            item_id = cursor.lastrowid  # Get the auto-incremented item_id
             log_action(item_id, "Added")
             messagebox.showinfo("Success", "Item added successfully!")
         except sqlite3.IntegrityError:
